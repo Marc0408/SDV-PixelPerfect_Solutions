@@ -1,10 +1,11 @@
 # How to install
-1. Downloads
+## 1. Downloads
   - downlaod and install github
   - download and install npm
+  - download and install python (Version: x.x.x)
   - ...
-2. Clone this repo
-3. Run these commands:
+## 2. Clone this repo
+## 3. Run these commands:
 ```
 npm install
 ```
