@@ -1,10 +1,11 @@
 import mysql.connector
+import constants
 
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    port="3306"
+    host=str(constants.host),
+    user=str(constants.user),
+    password=str(constants.password),
+    port=str(constants.port)
 )
  
 # Creating an instance of 'cursor' class 
@@ -17,11 +18,11 @@ mydb.disconnect()
 
 
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    port="3306",
-    database="sdv-pixelperfect"
+    host=str(constants.host),
+    user=str(constants.user),
+    password=str(constants.password),
+    port=int(constants.port),
+    database=str(constants.database)
 )
 
 cursor = mydb.cursor()
