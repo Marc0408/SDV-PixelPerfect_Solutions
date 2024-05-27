@@ -1,28 +1,23 @@
-import { useState } from 'react';
-import Header from './components/Header.tsx';
-import SearchSection from './components/SearchSection.tsx';
-import ScreenshotPreview from './components/ScreenshotPreview.tsx';
-import FilterModal from './components/FilterModal.tsx';
-import HelpPage from './components/HelpPage.tsx';
-import ScreenshotDetails from './components/ScreenshotDetails.tsx';
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelpPageLayout, Home, ScreenshotDetailPage, NoPage, Main } from "./pages/index.js"
 
-function App() {
-  const [isFilterModalVisible, setFilterModalVisible] = useState(false);
 
-  const toggleFilterModal = () => {
-    setFilterModalVisible(!isFilterModalVisible);
-  };
 
-  return (
-    <div className="App">
-      <Header />
-      <SearchSection toggleFilterModal={toggleFilterModal} />
-      <FilterModal isVisible={isFilterModalVisible} toggleFilterModal={toggleFilterModal} />
-      <ScreenshotPreview />
-      <HelpPage />
-      <ScreenshotDetails />
-    </div>
-  );
-}
-
-export default App;
+export default function App() {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Main />}>
+            <Route index element={<Home />} />
+            <Route path="help" element={<HelpPageLayout />} />
+            <Route path="screenshot" element={<ScreenshotDetailPage />} />
+            <Route path="*" element={<NoPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+  
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
