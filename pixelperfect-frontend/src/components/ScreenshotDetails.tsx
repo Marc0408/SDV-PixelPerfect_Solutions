@@ -1,6 +1,3 @@
-import React from 'react';
-import logo from '../logo.png';
-
 const ScreenshotDetails = () => {
   return (
     <main className="flex flex-col items-center p-4">

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const HelpPage = () => {
   return (
     <div className="flex flex-col items-center justify-center text-center p-4 min-h-screen bg-gray-900">

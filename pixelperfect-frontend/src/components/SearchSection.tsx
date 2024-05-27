@@ -1,6 +1,4 @@
-import React from 'react';
-
-const SearchSection = ({ toggleFilterModal }) => {
+const SearchSection = ({  toggleFilterModal }) => {
   return (
     <section className="flex justify-between p-4 bg-gray-700 mb-4 shadow">
       <div className="flex-1">

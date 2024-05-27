@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FilterModal = ({ isVisible, toggleFilterModal }) => {
   if (!isVisible) return null;
 
