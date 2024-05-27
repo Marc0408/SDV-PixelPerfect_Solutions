@@ -1,6 +1,6 @@
 # How to install
 ## 1. Downloads
-  - downlaod and install github
+  - download and install github
   - download and install npm
   - download and install python (Version: x.x.x)
   - ...
