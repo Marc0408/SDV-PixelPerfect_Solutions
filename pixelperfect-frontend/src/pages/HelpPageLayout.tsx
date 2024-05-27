@@ -1,9 +1,9 @@
-import React from 'react'
+import { HelpPage } from '../components/index.js';
 
 function HelpPageLayout() {
   return (
     <div>
-      HelpPage
+      <HelpPage />
     </div>
   )
 }

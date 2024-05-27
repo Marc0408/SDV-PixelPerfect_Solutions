@@ -2,11 +2,11 @@ const ScreenshotDetails = () => {
   return (
     <main className="flex flex-col items-center p-4">
       <section className="w-full max-w-screen-xl">
-        <img src="latest_perl.bmp" alt="Main Screenshot" className="w-full mb-4" />
+        <img src="../latest_perl.bmp" alt="Main Screenshot" className="w-full mb-4" />
       </section>
       <div className="flex flex-col lg:flex-row justify-between w-full max-w-screen-xl gap-4">
         <section className="flex-1">
-          <img src="latest_left.bmp" alt="Left Screenshot" className="w-full" />
+          <img src="../latest_left.bmp" alt="Left Screenshot" className="w-full" />
         </section>
         <section className="flex-1 bg-gray-800 p-4 rounded-lg shadow">
           <h2 className="text-2xl mb-4 text-white">Screenshot-Informationen</h2>
@@ -35,7 +35,8 @@ const ScreenshotDetails = () => {
           </table>
         </section>
         <section className="flex-1">
-          <img src="latest_right.bmp" alt="Right Screenshot" className="w-full" />
+          
+          <img src={`data:image/jpeg;base64,../assets/latest_right.bmp"`} alt="Right Screenshot" className="w-full" />
         </section>
       </div>
     </main>

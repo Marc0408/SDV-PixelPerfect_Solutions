@@ -1,5 +1,5 @@
 import { useState} from 'react'
-import { Header, SearchSection, FilterModal, ScreenshotPreview, HelpPage, ScreenshotDetails } from "../components/index";
+import { SearchSection, FilterModal, ScreenshotPreview, HelpPage, ScreenshotDetails } from "../components/index";
 
 function Home() {
     const [isFilterModalVisible, setFilterModalVisible] = useState(false);

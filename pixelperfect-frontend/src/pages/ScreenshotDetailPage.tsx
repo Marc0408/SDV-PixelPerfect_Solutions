@@ -1,9 +1,9 @@
-import React from 'react'
+import {ScreenshotDetails} from "../components/index";
 
 function ScreenshotDetailPage() {
   return (
     <div>
-      Screenshot
+      <ScreenshotDetails/>
     </div>
   )
 }

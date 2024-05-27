@@ -1,9 +1,9 @@
-import logo from '../logo.png';
+import logo from '../assets/logo.png';
 import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="flex justify-between items-center p-4 bg-gray-800">
+    <header className="w-full flex justify-between items-center p-4 bg-gray-800">
       <div className="max-w-xs">
         <img src={logo} alt="Logo" className="w-full h-auto" />
       </div>

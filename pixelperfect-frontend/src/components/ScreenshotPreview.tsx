@@ -1,11 +1,11 @@
-import logo from '../logo.png';
+import logo from '../assets/logo.png';
 
 const ScreenshotPreview = () => {
   const screenshots = Array(16).fill({
     src: logo,
     tags: 'Tag1',
     name: 'Screenshot 1',
-    link: 'page1.html'
+    link: 'screenshot'
   });
 
   return (
