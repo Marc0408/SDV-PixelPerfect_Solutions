@@ -55,19 +55,21 @@ const FilterModal = ({ isVisible, toggleFilterModal }) => {
               </span>
               Menüpunkte
             </h3>
-            {[menu1Image, menu2Image, menu3Image, menu4Image, menu5Image, menu6Image].map((img, index) => (
-              <div key={index} className="flex items-center my-2">
-                <input
-                  type="checkbox"
-                  name="menu"
-                  value={`menu${index + 1}`}
-                  checked={menuSelection.includes(`menu${index + 1}`)}
-                  onChange={(e) => handleCheckboxChange(menuSelection, setMenuSelection, e.target.value)}
-                  className="mr-2"
-                />
-                <img src={img} alt={`Menu ${index + 1}`} className="w-12 h-12 object-cover" />
-              </div>
-            ))}
+            <div className="flex flex-wrap gap-4">
+              {[menu1Image, menu2Image, menu3Image, menu4Image, menu5Image, menu6Image].map((img, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <input
+                    type="checkbox"
+                    name="menu"
+                    value={`menu${index + 1}`}
+                    checked={menuSelection.includes(`menu${index + 1}`)}
+                    onChange={(e) => handleCheckboxChange(menuSelection, setMenuSelection, e.target.value)}
+                    className="mb-2"
+                  />
+                  <img src={img} alt={`Menu ${index + 1}`} className="w-12 h-12 object-cover" />
+                </div>
+              ))}
+            </div>
           </div>
           <div className="bg-gray-800 p-4 rounded-lg shadow border border-gray-700">
             <h3 className="flex items-center">
