@@ -9,7 +9,7 @@ const ScreenshotPreview = () => {
   });
 
   return (
-    <section className="flex flex-wrap justify-center gap-5 p-4">
+    <section className="flex flex-wrap justify-center gap-5 p-4 bg-gray-900">
       {screenshots.map((screenshot, index) => (
         <div key={index} onClick={() => window.location.href = screenshot.link} className="w-1/4 bg-gray-800 text-white shadow rounded cursor-pointer transform transition-transform hover:translate-y-1">
           <img src={screenshot.src} alt="screenshot" className="w-full" />
