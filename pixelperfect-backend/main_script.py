@@ -95,8 +95,17 @@ def crawl_dir_and_add_to_database(path):
     query = "TRUNCATE TABLE `screenshot`"
     cursor.execute(query)
     mydb.commit()
-     
-    for img_path in os.listdir(path):        
+    
+    # File rename
+    print("Renaming bmp files because they have a png header")
+    for img_path in os.listdir(path):
+        if ".bmp" in img_path:
+            complete_path = path + "\\" + img_path
+            dst_path = complete_path.split(".")[0] + ".png"
+            os.rename(src=complete_path, dst=dst_path)
+
+    # Files in db
+    for img_path in os.listdir(path):
         complete_path = path + "\\" + img_path
         complete_path = replaceBackSlashWithDoubleBackSlash(complete_path)
         menue_state = get_menue_state(complete_path, img_path)
@@ -107,9 +116,6 @@ def crawl_dir_and_add_to_database(path):
             set_screentag(mydb, cursor, screen_id, tag_id)
         else:
             set_values_in_database(mydb, cursor, complete_path, constants.STATE_INACTIVE)
-        # print(get_menue_state(complete_path, img_path))
-        # set_values_in_database(cursor, complete_path, constants.STATE_SCREENSAVER)
-    
     return
 
 
