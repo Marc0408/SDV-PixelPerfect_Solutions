@@ -1,4 +1,13 @@
+import { useEffect, useState } from "react";
+
 const ScreenshotDetails = () => {
+  const [data, setData] = useState([])
+  useEffect(()=>{
+    fetch('http://localhost:8081/tag')
+    .then(res => res.json())
+    .then(data => setData(data))
+    .catch(err => console.log(err));
+  }, [])
   return (
     <main className="flex flex-col items-center p-4">
       <section className="w-full max-w-screen-xl">
@@ -13,24 +22,20 @@ const ScreenshotDetails = () => {
           <table className="w-full text-left text-white">
             <thead>
               <tr>
-                <th className="border p-2">Filter</th>
-                <th className="border p-2">Details</th>
+                <th className="border p-2">Tag ID</th>
+                <th className="border p-2">Tag Name</th>
+                <th className="border p-2">Tag Value</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border p-2">Menu</td>
-                <td className="border p-2">Menu 1</td>
+              
+              {data.map((d, i) => (
+                <tr key={i}>
+                <td className="border p-2">{d.TagID}</td>
+                <td className="border p-2">{d.TagName}</td>
+                <td className="border p-2">{d.TagValue}</td>
               </tr>
-              <tr>
-                <td className="border p-2">Gebiete</td>
-                <td className="border p-2">KVV</td>
-              </tr>
-              <tr>
-                <td className="border p-2">Sprachen</td>
-                <td className="border p-2">Deutsch</td>
-              </tr>
-              {/* Weitere Filterinformationen hier */}
+              ))}
             </tbody>
           </table>
         </section>

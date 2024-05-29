@@ -2,5 +2,5 @@ venv
 .venv
 inactive_example_paths.txt
 active_example_paths.txt
-
+node_modules
 __*
