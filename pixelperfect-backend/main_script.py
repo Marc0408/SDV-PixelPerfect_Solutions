@@ -8,46 +8,33 @@ import os
 import mysql.connector
 
 
-def get_white_pixel_count(path):
-    """This function returns the amount of white pixels from a picture
+def compare_tuple(a, b):
+    try:
+        for x in range(len(a)-1):
+            if a[x] != b[x]:
+                return False 
+        return True
+    except:
+        return False
 
-    Args:
-        path (String): Path to image
-
-    Returns:
-        int: amount of white pixels in image
-    """
-    img = PIL.Image.open(path)
-    white = (255, 255, 255, 255)
-    numwhites= 0
-    for pixel in img.getdata():
-        if pixel == white: 
-            numwhites += 1
-    img.close()
-    return numwhites
-
-
-def get_average_from_txt_file(txt_file_path):
-    """This Function returns the average value of white pixels in given screenshot paths
-
-    Args:
-        txt_file_path (String): Path to text file
-
-    Returns:
-        float: average value of white pixels in given screenshot paths
-        int: difference between max and min amount of white pixels to get an idea of a good threshold
-    """
-    txt_file = open(txt_file_path)
-    nums = []
-    while True:
-        line = txt_file.readline().strip()
-        if line != "":
-            nums.append(get_white_pixel_count(line))
-        else:
-            break
-    min_nums, max_nums = min(nums), max(nums)
-    max_min_nums = max_nums-min_nums
-    return statistics.mean(nums), max_min_nums
+def get_menue_state(complete_path, img_path):
+    im = PIL.Image.open(complete_path)
+    rgb_im = im.convert('RGB')
+    if "right" in img_path:
+        for x in range(len(constants.MENUE_RIGHT_POSITIONS) - 1):
+            r, g, b = rgb_im.getpixel(constants.MENUE_RIGHT_POSITIONS[x])
+            if compare_tuple((r, g, b), constants.MENUE_RED_ACTIVE): # IF RED
+                return x
+            elif compare_tuple((r, g, b), constants.MENUE_GREEN_ACTIVE): # IF RED
+                return x
+    elif "left" in img_path:
+        for x in range(len(constants.MENUE_LEFT_POSITIONS) - 1):
+            r, g, b = rgb_im.getpixel(constants.MENUE_LEFT_POSITIONS[x])
+            if compare_tuple((r, g, b), constants.MENUE_RED_ACTIVE): # IF RED
+                return x
+            elif compare_tuple((r, g, b), constants.MENUE_GREEN_ACTIVE): # IF RED
+                return x
+    return -1
 
 
 def crawl_dir_and_add_to_database(path):
@@ -67,21 +54,8 @@ def crawl_dir_and_add_to_database(path):
 
     for img_path in os.listdir(path):        
         complete_path = path + "\\" + img_path
-        white_pixel_amount = get_white_pixel_count(complete_path)
-        if constants.INACTIVE_WHITE_PIXELS_TOP_BORDER > white_pixel_amount and \
-        constants.INACTIVE_WHITE_PIXELS_BOTTOM_BORDER < white_pixel_amount:
-            # Inactive State
-            # print("Inactive: " + img_path)
-            set_values_in_database(cursor, complete_path, constants.STATE_INACTIVE)
-        elif constants.ACTIVE_WHITE_PIXELS_TOP_BORDER > white_pixel_amount and \
-        constants.ACTIVE_WHITE_PIXELS_BOTTOM_BORDER < white_pixel_amount:
-            # Active State
-            # print("Active: " + img_path)
-            set_values_in_database(cursor, complete_path, constants.STATE_ACTIVE)
-        else:
-            # Screensaver State
-            # print("Screensaver: " + img_path)
-            set_values_in_database(cursor, complete_path, constants.STATE_SCREENSAVER)
+        print(get_menue_state(complete_path, img_path))
+        # set_values_in_database(cursor, complete_path, constants.STATE_SCREENSAVER)
     mydb.commit()
     return
 
