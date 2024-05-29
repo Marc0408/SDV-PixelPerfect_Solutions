@@ -67,8 +67,6 @@ def crawl_dir_and_add_to_database(path):
 
     for img_path in os.listdir(path):        
         complete_path = path + "\\" + img_path
-        complete_path = r""+complete_path
-        complete_path.replace('\\','\\\\')
         white_pixel_amount = get_white_pixel_count(complete_path)
         if constants.INACTIVE_WHITE_PIXELS_TOP_BORDER > white_pixel_amount and \
         constants.INACTIVE_WHITE_PIXELS_BOTTOM_BORDER < white_pixel_amount:
