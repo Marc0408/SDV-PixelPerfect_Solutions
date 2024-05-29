@@ -17,6 +17,45 @@ def compare_tuple(a, b):
     except:
         return False
 
+
+def set_screentag(mydb, cursor, screenid, tagid):
+    query = "INSERT INTO `screentag`(`ScreenshotID`, `TagID`) VALUES ('{}','{}')".format(screenid, tagid)
+    cursor.execute(query)
+    mydb.commit()
+    return
+
+
+def get_screen_id(cursor, path, state): #-1 if not exists
+    query = "SELECT * FROM `screenshot` WHERE `Path` = '{}' AND `State` = '{}'".format(path, state)
+    cursor.execute(query)
+    res = cursor.fetchall()
+    if len(res) > 0:
+        return res[0][0]
+    elif len(res) == 0:
+        return -1
+
+
+def get_tag_id(cursor, tag, value): #-1 if not exists
+    query = "SELECT * FROM `tag` WHERE `TagName` = '{}' AND `TagValue` = '{}'".format(tag, value)
+    cursor.execute(query)
+    res = cursor.fetchall()
+    if len(res) > 0:
+        return res[0][0]
+    elif len(res) == 0:
+        return -1
+
+def set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, tag, value):
+    id = get_tag_id(cursor, tag, value)
+    if id > 0:
+        return id
+    elif id < 0:
+        query = "INSERT INTO `tag` (`TagName`, `TagValue`) VALUES ('{}','{}')".format(tag, value)
+        cursor.execute(query)
+        mydb.commit()
+        return get_tag_id(cursor, tag, value)
+    return -1
+
+
 def get_menue_state(complete_path, img_path):
     im = PIL.Image.open(complete_path)
     rgb_im = im.convert('RGB')
@@ -51,12 +90,26 @@ def crawl_dir_and_add_to_database(path):
         database=str(constants.database)
     )
     cursor = mydb.cursor()
-
+    
+    # Clean DB
+    query = "TRUNCATE TABLE `screenshot`"
+    cursor.execute(query)
+    mydb.commit()
+     
     for img_path in os.listdir(path):        
         complete_path = path + "\\" + img_path
-        print(get_menue_state(complete_path, img_path))
+        complete_path = replaceBackSlashWithDoubleBackSlash(complete_path)
+        menue_state = get_menue_state(complete_path, img_path)
+        if menue_state >= 0:
+            set_values_in_database(mydb, cursor, complete_path, constants.STATE_ACTIVE)
+            screen_id = get_screen_id(cursor, complete_path, constants.STATE_ACTIVE)
+            tag_id = set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, "Menue", menue_state)
+            set_screentag(mydb, cursor, screen_id, tag_id)
+        else:
+            set_values_in_database(mydb, cursor, complete_path, constants.STATE_INACTIVE)
+        # print(get_menue_state(complete_path, img_path))
         # set_values_in_database(cursor, complete_path, constants.STATE_SCREENSAVER)
-    mydb.commit()
+    
     return
 
 
@@ -69,7 +122,7 @@ def replaceBackSlashWithDoubleBackSlash(s : str):
     return r
 
 
-def set_values_in_database(cursor, path, state):
+def set_values_in_database(mydb, cursor, path, state):
     """TThis method sets the values in the DB
 
     Args:
@@ -77,9 +130,9 @@ def set_values_in_database(cursor, path, state):
         path (_type_): Path of screenshot
         state (_type_): State value
     """
-    s = replaceBackSlashWithDoubleBackSlash(path)
-    query = "INSERT INTO `screenshot` (Path, State) VALUES ('{}', '{}');".format(s, state)
+    query = "INSERT INTO `screenshot` (Path, State) VALUES ('{}', '{}');".format(path, state)
     cursor.execute(query)
+    mydb.commit()
     return
 
 
