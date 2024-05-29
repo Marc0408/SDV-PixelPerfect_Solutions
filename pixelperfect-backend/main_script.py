@@ -65,8 +65,10 @@ def crawl_dir_and_add_to_database(path):
     )
     cursor = mydb.cursor()
 
-    for img_path in os.listdir(path):
+    for img_path in os.listdir(path):        
         complete_path = path + "\\" + img_path
+        complete_path = r""+complete_path
+        complete_path.replace('\\','\\\\')
         white_pixel_amount = get_white_pixel_count(complete_path)
         if constants.INACTIVE_WHITE_PIXELS_TOP_BORDER > white_pixel_amount and \
         constants.INACTIVE_WHITE_PIXELS_BOTTOM_BORDER < white_pixel_amount:
@@ -86,6 +88,15 @@ def crawl_dir_and_add_to_database(path):
     return
 
 
+def replaceBackSlashWithDoubleBackSlash(s : str):
+    a = s.split("\\")
+    r=""
+    for x in range(len(a)-1):
+        r = r + a[x] + "\\\\"
+    r = r + a[len(a)-1]
+    return r
+
+
 def set_values_in_database(cursor, path, state):
     """TThis method sets the values in the DB
 
@@ -94,7 +105,8 @@ def set_values_in_database(cursor, path, state):
         path (_type_): Path of screenshot
         state (_type_): State value
     """
-    query = "INSERT INTO `screenshot` (Path, State) VALUES ('{}', '{}');".format(path, state)
+    s = replaceBackSlashWithDoubleBackSlash(path)
+    query = "INSERT INTO `screenshot` (Path, State) VALUES ('{}', '{}');".format(s, state)
     cursor.execute(query)
     return
 
