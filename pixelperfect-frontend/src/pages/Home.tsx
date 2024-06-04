@@ -1,5 +1,5 @@
 import { useState} from 'react'
-import { SearchSection, FilterModal, ScreenshotPreview, HelpPage, ScreenshotDetails } from "../components/index";
+import { SearchSection, FilterModal, ScreenshotPreview, ScreenshotDetails } from "../components/index";
 
 function Home() {
     const [isFilterModalVisible, setFilterModalVisible] = useState(false);
@@ -13,7 +13,6 @@ function Home() {
         <SearchSection toggleFilterModal={toggleFilterModal} />
         <FilterModal isVisible={isFilterModalVisible} toggleFilterModal={toggleFilterModal} />
         <ScreenshotPreview />
-        <HelpPage />
         <ScreenshotDetails />
       </div>
     );

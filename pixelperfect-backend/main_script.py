@@ -109,14 +109,21 @@ def crawl_dir_and_add_to_database(path):
         complete_path = path + "\\" + img_path
         complete_path = replaceBackSlashWithDoubleBackSlash(complete_path)
         menue_state = get_menue_state(complete_path, img_path)
+        relative_path = getRelativePath(complete_path)
         if menue_state >= 0:
-            set_values_in_database(mydb, cursor, complete_path, constants.STATE_ACTIVE)
-            screen_id = get_screen_id(cursor, complete_path, constants.STATE_ACTIVE)
+            set_values_in_database(mydb, cursor, relative_path, constants.STATE_ACTIVE)
+            screen_id = get_screen_id(cursor, relative_path, constants.STATE_ACTIVE)
             tag_id = set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, "Menue", menue_state)
             set_screentag(mydb, cursor, screen_id, tag_id)
         else:
-            set_values_in_database(mydb, cursor, complete_path, constants.STATE_INACTIVE)
+            set_values_in_database(mydb, cursor, relative_path, constants.STATE_INACTIVE)
     return
+
+
+def getRelativePath(path: str):
+    path_array = path.split("SDV-PixelPerfect_Solutions\\\\pixelperfect-frontend")
+    relative_path = "." + path_array[1]
+    return relative_path
 
 
 def replaceBackSlashWithDoubleBackSlash(s : str):

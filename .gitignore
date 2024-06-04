@@ -1,1 +1,3 @@
 .vscode
+/pixelperfect-frontend/src/screenshotfolder/*
+!/pixelperfect-frontend/src/screenshotfolder/put_screenshots_here.txt
