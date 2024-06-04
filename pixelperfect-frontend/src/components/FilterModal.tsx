@@ -12,31 +12,43 @@ import menu6Image from '../assets/menu6.png';
 const FilterModal = ({ isVisible, toggleFilterModal }) => {
   const [menuSelection, setMenuSelection] = useState([]);
   const [areaSelection, setAreaSelection] = useState([]);
-  const [dropdownSelection, setDropdownSelection] = useState('');
   const [languageSelection, setLanguageSelection] = useState([]);
   const [weatherSelection, setWeatherSelection] = useState([]);
   const [temperatureRange, setTemperatureRange] = useState([0, 30]);
   const [dateRange, setDateRange] = useState({ from: '', to: '' });
 
-  if (!isVisible) return null;
+  const handleCheckboxChange = (selection, setSelection, value) => {
+    setSelection(selection.includes(value) ? selection.filter(v => v !== value) : [...selection, value]);
+  };
 
-  const handleSaveFilters = () => {
+  const handleSaveFilters = async () => {
     const filters = {
       menu: menuSelection,
       area: areaSelection,
-      dropdown: dropdownSelection,
       language: languageSelection,
       weather: weatherSelection,
       temperature: temperatureRange,
       date: dateRange,
     };
-    console.log('Selected Filters:', filters);
-    return filters;
+    
+    try {
+      const response = await fetch('http://localhost:8081/filtered-screenshots', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(filters),
+      });
+
+      const data = await response.json();
+      console.log('Filtered Data:', data);
+      // weiterverarbeiten oder an eine andere Komponente weitergeben
+    } catch (error) {
+      console.error('Error fetching filtered screenshots:', error);
+    }
   };
 
-  const handleCheckboxChange = (selection, setSelection, value) => {
-    setSelection(selection.includes(value) ? selection.filter(v => v !== value) : [...selection, value]);
-  };
+  if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -83,8 +95,8 @@ const FilterModal = ({ isVisible, toggleFilterModal }) => {
                 <input
                   type="checkbox"
                   name="area"
-                  value={`area${index + 1}`}
-                  checked={areaSelection.includes(`area${index + 1}`)}
+                  value={area}
+                  checked={areaSelection.includes(area)}
                   onChange={(e) => handleCheckboxChange(areaSelection, setAreaSelection, e.target.value)}
                   className="mr-2"
                 />
@@ -92,18 +104,7 @@ const FilterModal = ({ isVisible, toggleFilterModal }) => {
               </div>
             ))}
           </div>
-          <div className="bg-gray-800 p-4 rounded-lg shadow border border-gray-700">
-            <h3>Dropdown Menü</h3>
-            <select
-              value={dropdownSelection}
-              onChange={(e) => setDropdownSelection(e.target.value)}
-              className="bg-gray-700 text-white p-2 rounded w-full mt-2"
-            >
-              <option value="">Bitte wählen</option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-            </select>
-          </div>
+        
           <div className="bg-gray-800 p-4 rounded-lg shadow border border-gray-700">
             <h3 className="flex items-center">
               <span style={{ marginRight: '8px' }}>
@@ -112,8 +113,8 @@ const FilterModal = ({ isVisible, toggleFilterModal }) => {
               Sprachen
             </h3>
             {[
-              { code: "DE", label: "Deutsch", value: "de" },
-              { code: "GB", label: "Englisch", value: "en" },
+              { code: "DE", label: "Deutsch", value: "Deutsch" },
+              { code: "GB", label: "Englisch", value: "Englisch" },
             ].map((lang, index) => (
               <div key={index} className="flex items-center my-2">
                 <input
@@ -134,8 +135,8 @@ const FilterModal = ({ isVisible, toggleFilterModal }) => {
             {[
               { icon: <FaSun size={20} />, label: "Sonnig", value: "sunny" },
               { icon: <FaCloud size={20} />, label: "Bewölkt", value: "cloudy" },
-              { icon: <FaCloudRain size={20} />, label: "Regen", value: "rain" },
-              { icon: <FaSnowflake size={20} />, label: "Schnee", value: "snow" },
+              { icon: <FaCloudRain size={20} />, label: "Regnerisch", value: "rainy" },
+              { icon: <FaSnowflake size={20} />, label: "Schnee", value: "snowy" },
             ].map((weather, index) => (
               <div key={index} className="flex items-center my-2">
                 <input
@@ -146,73 +147,57 @@ const FilterModal = ({ isVisible, toggleFilterModal }) => {
                   onChange={(e) => handleCheckboxChange(weatherSelection, setWeatherSelection, e.target.value)}
                   className="mr-2"
                 />
-                <span className="flex items-center" style={{ marginRight: '8px' }}>{weather.icon}</span>
+                <span className="mr-2">{weather.icon}</span>
                 <span>{weather.label}</span>
               </div>
             ))}
           </div>
-          <div className="bg-gray-800 p-4 rounded-lg shadow border border-gray-700 col-span-full">
+          <div className="bg-gray-800 p-4 rounded-lg shadow border border-gray-700">
             <h3>Temperatur</h3>
             <div className="flex items-center">
               <input
-                type="range"
-                min="-30"
-                max="50"
+                type="number"
                 value={temperatureRange[0]}
-                onChange={(e) => setTemperatureRange([Number(e.target.value), temperatureRange[1]])}
-                className="mr-2 w-full"
+                onChange={(e) => setTemperatureRange([+e.target.value, temperatureRange[1]])}
+                className="bg-gray-700 text-white p-2 rounded w-full mr-2"
+                placeholder="Min"
               />
-              <span>{temperatureRange[0]}°C</span>
-            </div>
-            <div className="flex items-center mt-2">
+              <span>-</span>
               <input
-                type="range"
-                min="-30"
-                max="50"
+                type="number"
                 value={temperatureRange[1]}
-                onChange={(e) => setTemperatureRange([temperatureRange[0], Number(e.target.value)])}
-                className="mr-2 w-full"
+                onChange={(e) => setTemperatureRange([temperatureRange[0], +e.target.value])}
+                className="bg-gray-700 text-white p-2 rounded w-full ml-2"
+                placeholder="Max"
               />
-              <span>{temperatureRange[1]}°C</span>
             </div>
           </div>
-          <div className="bg-gray-800 p-4 rounded-lg shadow border border-gray-700 col-span-full">
+          <div className="bg-gray-800 p-4 rounded-lg shadow border border-gray-700">
             <h3>Datum</h3>
             <div className="flex flex-col space-y-2">
-              <label>Von:</label>
               <input
                 type="date"
                 value={dateRange.from}
                 onChange={(e) => setDateRange({ ...dateRange, from: e.target.value })}
                 className="bg-gray-700 text-white p-2 rounded w-full"
+                placeholder="Von"
               />
-              <label>Bis:</label>
               <input
                 type="date"
                 value={dateRange.to}
                 onChange={(e) => setDateRange({ ...dateRange, to: e.target.value })}
                 className="bg-gray-700 text-white p-2 rounded w-full"
+                placeholder="Bis"
               />
             </div>
           </div>
         </div>
-        <div className="flex justify-between mt-4">
+        <div className="mt-6 flex justify-end">
           <button
-            onClick={() => {
-              setMenuSelection([]);
-              setAreaSelection([]);
-              setDropdownSelection('');
-              setLanguageSelection([]);
-              setWeatherSelection([]);
-              setTemperatureRange([0, 30]);
-              setDateRange({ from: '', to: '' });
-            }}
-            className="bg-red-600 hover:bg-red-500 p-2 rounded"
+            onClick={handleSaveFilters}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            Alle Auswahlen Entfernen
-          </button>
-          <button onClick={handleSaveFilters} className="bg-blue-600 hover:bg-blue-500 p-2 rounded">
-            Speichern
+            Filter anwenden
           </button>
         </div>
       </div>

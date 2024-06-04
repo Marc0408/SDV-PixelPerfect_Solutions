@@ -1,6 +1,6 @@
 const SearchSection = ({  toggleFilterModal }) => {
   return (
-    <section className="flex justify-between p-4 bg-gray-700 mb-4 shadow">
+    <section className="flex justify-between p-4 bg-gray-700 shadow">
       <div className="flex-1">
         <p className="text-white">Screenshots</p>
       </div>
