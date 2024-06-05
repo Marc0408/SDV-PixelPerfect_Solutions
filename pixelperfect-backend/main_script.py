@@ -132,7 +132,6 @@ def getRelativePath(path: str):
 
 
 def get_date_time_and_screen_side_from_img_name(img_name: str):
-    print(img_name)
     s = img_name.split(".")[0].split("-")
     side = s[1]
     time = s[2:]
