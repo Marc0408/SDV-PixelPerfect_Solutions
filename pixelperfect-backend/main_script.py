@@ -94,6 +94,10 @@ def crawl_dir_and_add_to_database(path):
     # Clean DB
     query = "TRUNCATE TABLE `screenshot`"
     cursor.execute(query)
+    query = "TRUNCATE TABLE `tag`"
+    cursor.execute(query)
+    query = "TRUNCATE TABLE `screentag`"
+    cursor.execute(query)
     mydb.commit()
     
     # File rename
