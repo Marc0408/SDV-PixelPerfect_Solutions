@@ -51,7 +51,9 @@ cursor.execute("""
     CREATE TABLE `screenshot` (
     `ScreenshotID` int(11) NOT NULL,
     `Path` text NOT NULL,
-    `State` int(11) NOT NULL
+    `State` tinyint(11) NOT NULL,
+    `Side` tinyint(11) NOT NULL,
+    `Time` datetime NOT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
     -- --------------------------------------------------------

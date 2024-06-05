@@ -114,13 +114,14 @@ def crawl_dir_and_add_to_database(path):
         complete_path = replaceBackSlashWithDoubleBackSlash(complete_path)
         menue_state = get_menue_state(complete_path, img_path)
         relative_path = getRelativePath(complete_path)
+        date_time, side = get_date_time_and_screen_side_from_img_name(img_path)
         if menue_state >= 0:
-            set_values_in_database(mydb, cursor, relative_path, constants.STATE_ACTIVE)
+            set_values_in_database(mydb, cursor, relative_path, constants.STATE_ACTIVE, date_time, side)
             screen_id = get_screen_id(cursor, relative_path, constants.STATE_ACTIVE)
             tag_id = set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, "Menue", menue_state)
             set_screentag(mydb, cursor, screen_id, tag_id)
         else:
-            set_values_in_database(mydb, cursor, relative_path, constants.STATE_INACTIVE)
+            set_values_in_database(mydb, cursor, relative_path, constants.STATE_INACTIVE, date_time, side)
     return
 
 
@@ -128,6 +129,25 @@ def getRelativePath(path: str):
     path_array = path.split("SDV-PixelPerfect_Solutions\\\\pixelperfect-frontend")
     relative_path = "." + path_array[1]
     return relative_path
+
+
+def get_date_time_and_screen_side_from_img_name(img_name: str):
+    print(img_name)
+    s = img_name.split(".")[0].split("-")
+    side = s[1]
+    time = s[2:]
+    date_time = ""
+    for x in range(len(time)-1):
+        date_time += time[x] + "-"
+    date_time += time[-1]
+    side_int = -10
+    if "right" in side:
+        side_int = constants.SCREEN_RIGHT
+    elif "left" in side:
+        side_int = constants.SCREEN_LEFT
+    elif "perl" in side:
+        side_int = constants.SCREEN_MIDDLE
+    return date_time, side_int
 
 
 def replaceBackSlashWithDoubleBackSlash(s : str):
@@ -139,7 +159,7 @@ def replaceBackSlashWithDoubleBackSlash(s : str):
     return r
 
 
-def set_values_in_database(mydb, cursor, path, state):
+def set_values_in_database(mydb, cursor, path, state, date_time, side):
     """TThis method sets the values in the DB
 
     Args:
@@ -147,7 +167,7 @@ def set_values_in_database(mydb, cursor, path, state):
         path (_type_): Path of screenshot
         state (_type_): State value
     """
-    query = "INSERT INTO `screenshot` (Path, State) VALUES ('{}', '{}');".format(path, state)
+    query = "INSERT INTO `screenshot` (Path, State, Side, Time) VALUES ('{}', '{}', '{}', '{}');".format(path, state, side, date_time)
     cursor.execute(query)
     mydb.commit()
     return
