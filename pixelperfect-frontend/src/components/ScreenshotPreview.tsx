@@ -4,20 +4,29 @@ const ScreenshotPreview = () => {
     const [screenshots, setScreenshots] = useState([]);
 
     useEffect(() => {
-        // Beispiel für die anfängliche Anfrage, könnte später durch eine Filteranfrage ersetzt werden
         fetch('http://localhost:8081/screenshot')
             .then(response => response.json())
-            .then(data => setScreenshots(data))
+            .then(data => {
+                // Group screenshots by time
+                const groupedScreenshots = data.reduce((acc, screenshot) => {
+                    if (!acc[screenshot.Time]) {
+                        acc[screenshot.Time] = [];
+                    }
+                    acc[screenshot.Time].push(screenshot);
+                    return acc;
+                }, {});
+
+                setScreenshots(Object.values(groupedScreenshots));
+            })
             .catch(err => console.log(err));
     }, []);
 
     return (
         <section className="flex flex-wrap justify-center gap-5 p-4 bg-gray-900">
-            {screenshots.map((screenshot, index) => (
-                <div key={index} onClick={() => window.location.href = `/screenshot/${screenshot.ScreenshotID}`} className="w-1/4 bg-gray-800 text-white shadow rounded cursor-pointer transform transition-transform hover:translate-y-1">
-                    <img src={screenshot.Path} alt="screenshot" className="w-full" />
-                    <p className="p-2 bg-gray-700">{screenshot.TagName}</p>
-                    <p className="p-2 font-bold">Screenshot {screenshot.ScreenshotID}</p>
+            {screenshots.map((group, index) => (
+                <div key={index} onClick={() => window.location.href = `/screenshot/${group[0].Time}`} className="w-1/4 bg-gray-800 text-white shadow rounded cursor-pointer transform transition-transform hover:translate-y-1">
+                    <img src={group[0].Path} alt="screenshot" className="w-full" />
+                    <p className="p-2 font-bold">Screenshot {group[0].Time}</p>
                 </div>
             ))}
         </section>
