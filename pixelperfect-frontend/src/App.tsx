@@ -1,4 +1,3 @@
-import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelpPageLayout, Home, ScreenshotDetailPage, NoPage, Main } from "./pages/index.js"
 
@@ -17,5 +16,3 @@ export default function App() {
     );
   }
   
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
