@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 // Fetch all screenshots
 app.get('/screenshot', (req, res) => {
-    const sql = "SELECT * FROM `screenshot`";
+    const sql = "SELECT * FROM `screenshot` WHERE `state` = 1";
     db.query(sql, (err, data) => {
         if (err) return res.json(err);
         return res.json(data);
