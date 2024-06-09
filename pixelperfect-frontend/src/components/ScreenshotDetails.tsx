@@ -53,11 +53,11 @@ const ScreenshotDetails = ({ time }) => {
     return (
         <main className="flex flex-col items-center p-4">
             <section className="w-full max-w-screen-xl">
-                {topScreenshot && <img src={topScreenshot.Path} alt="Top Screenshot" className="w-full mb-4" />}
+                {topScreenshot && <img src={"." + topScreenshot.Path} alt="Top Screenshot" className="w-full mb-4" />}
             </section>
             <div className="flex flex-col lg:flex-row justify-between w-full max-w-screen-xl gap-4">
                 <section className="flex-1">
-                    {leftScreenshot && <img src={leftScreenshot.Path} alt="Left Screenshot" className="w-full" />}
+                    {leftScreenshot && <img src={"." + leftScreenshot.Path} alt="Left Screenshot" className="w-full" />}
                 </section>
                 <section className="flex-1 bg-gray-800 p-4 rounded-lg shadow">
                     <h2 className="text-2xl mb-4 text-white">Screenshot-Informationen</h2>
@@ -81,7 +81,7 @@ const ScreenshotDetails = ({ time }) => {
                     </table>
                 </section>
                 <section className="flex-1">
-                    {rightScreenshot && <img src={rightScreenshot.Path} alt="Right Screenshot" className="w-full" />}
+                    {rightScreenshot && <img src={"." + rightScreenshot.Path} alt="Right Screenshot" className="w-full" />}
                 </section>
             </div>
         </main>
