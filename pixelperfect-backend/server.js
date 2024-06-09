@@ -26,6 +26,16 @@ app.get('/screenshot', (req, res) => {
     });
 });
 
+// Fetch screenshots by time
+app.get('/screenshot/:time', (req, res) => {
+    const { time } = req.params;
+    const sql = "SELECT * FROM `screenshot` WHERE `Time` = ?";
+    db.query(sql, [time], (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+});
+
 // Fetch all screentags
 app.get('/screentag', (req, res) => {
     const sql = "SELECT * FROM `screentag`";
@@ -92,7 +102,7 @@ app.post('/filtered-screenshots', (req, res) => {
         FROM screenshot s
         JOIN screentag st ON s.ScreenshotID = st.ScreenshotID
         JOIN tag t ON st.TagID = t.TagID
-        WHERE 1=1
+        WHERE s.State = 1
     `;
     
     if (menu && menu.length > 0) {

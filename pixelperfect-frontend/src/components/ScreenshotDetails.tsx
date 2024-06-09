@@ -1,29 +1,54 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
-const ScreenshotDetails = () => {
-    const { time } = useParams();
+const ScreenshotDetails = ({ time }) => {
     const [screenshots, setScreenshots] = useState([]);
     const [tags, setTags] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:8081/screenshot?time=${time}`)
-            .then(res => res.json())
-            .then(data => setScreenshots(data))
-            .catch(err => console.log(err));
+        const encodedTime = encodeURIComponent(time);
+        setLoading(true);
+        fetch(`http://localhost:8081/screenshot?time=${encodedTime}`)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
+            .then(data => {
+                setScreenshots(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err);
+                setLoading(false);
+            });
     }, [time]);
 
     useEffect(() => {
         fetch('http://localhost:8081/tag')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
             .then(data => setTags(data))
-            .catch(err => console.log(err));
+            .catch(err => setError(err));
     }, []);
 
     const leftScreenshot = screenshots.length > 0 ? screenshots.find(s => s.Side === -1) : null;
     const rightScreenshot = screenshots.length > 0 ? screenshots.find(s => s.Side === 1) : null;
     const topScreenshot = screenshots.length > 0 ? screenshots.find(s => s.Side === 0) : null;
-    
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
 
     return (
         <main className="flex flex-col items-center p-4">

@@ -3,7 +3,7 @@
 function NoPage() {
   return (
     <div>
-        Error
+        Scheiße
     </div>
   )
 }
