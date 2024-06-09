@@ -76,22 +76,8 @@ def get_menue_state(complete_path, img_path):
     return -1
 
 
-def crawl_dir_and_add_to_database(path):
-    """This methods crawls through given file directory and updates the db with analysed values
-
-    Args:
-        path (String): Path for directory which this method has to crawl through
-    """
-    mydb = mysql.connector.connect(
-        host=str(constants.host),
-        user=str(constants.user),
-        password=str(constants.password),
-        port=int(constants.port),
-        database=str(constants.database)
-    )
-    cursor = mydb.cursor()
-    
-    # Clean DB
+def clean_db(cursor, mydb):
+    print("Cleaning DB...")
     query = "TRUNCATE TABLE `screenshot`"
     cursor.execute(query)
     query = "TRUNCATE TABLE `tag`"
@@ -99,16 +85,40 @@ def crawl_dir_and_add_to_database(path):
     query = "TRUNCATE TABLE `screentag`"
     cursor.execute(query)
     mydb.commit()
-    
-    # File rename
-    print("Renaming bmp files because they have a png header")
+    return
+
+
+def rename_files_to_png(path):
+    print("Renaming bmp files because they have a png header...")
     for img_path in os.listdir(path):
         if ".bmp" in img_path:
             complete_path = path + "\\" + img_path
             dst_path = complete_path.split(".")[0] + ".png"
             os.rename(src=complete_path, dst=dst_path)
+    return
 
-    # Files in db
+
+def get_region_of_screenshot(complete_path, img_path):
+    im = PIL.Image.open(complete_path)
+    rgb_im = im.convert('RGB')
+    (r, g, b) = (0, 0, 0)
+    if "right" in img_path:
+        r, g, b = rgb_im.getpixel(constants.RIGHT_CONNECT)
+    elif "left" in img_path:
+        r, g, b = rgb_im.getpixel(constants.LEFT_CONNECT)
+    else:
+        return -1
+    if compare_tuple((r, g, b), constants.MENUE_RED_ACTIVE) or compare_tuple((r, g, b), constants.MENUE_RED_PASSIVE): # IF RED
+        return "KVV"
+    elif compare_tuple((r, g, b), constants.MENUE_GREEN_ACTIVE) or compare_tuple((r, g, b), constants.MENUE_GREEN_PASSIVE): # IF GREEN
+        return "Außerhalb KVV"
+    return -1
+
+
+def crawl_dir_and_add_to_database(path, mydb, cursor):
+    rename_files_to_png(path)
+    
+    print("Analyzing screenshots...")
     for img_path in os.listdir(path):
         complete_path = path + "\\" + img_path
         complete_path = replaceBackSlashWithDoubleBackSlash(complete_path)
@@ -119,6 +129,8 @@ def crawl_dir_and_add_to_database(path):
             set_values_in_database(mydb, cursor, relative_path, constants.STATE_ACTIVE, date_time, side)
             screen_id = get_screen_id(cursor, relative_path, constants.STATE_ACTIVE)
             tag_id = set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, "Menue", menue_state)
+            set_screentag(mydb, cursor, screen_id, tag_id)
+            tag_id = set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, "Region", get_region_of_screenshot(complete_path, img_path))
             set_screentag(mydb, cursor, screen_id, tag_id)
         else:
             set_values_in_database(mydb, cursor, relative_path, constants.STATE_INACTIVE, date_time, side)
@@ -159,7 +171,7 @@ def replaceBackSlashWithDoubleBackSlash(s : str):
 
 
 def set_values_in_database(mydb, cursor, path, state, date_time, side):
-    """TThis method sets the values in the DB
+    """This method sets the values in the DB
 
     Args:
         cursor (mysql coursor): cursor for db
@@ -172,18 +184,39 @@ def set_values_in_database(mydb, cursor, path, state, date_time, side):
     return
 
 
+def init_db():
+    mydb = mysql.connector.connect(
+        host=str(constants.host),
+        user=str(constants.user),
+        password=str(constants.password),
+        port=int(constants.port),
+        database=str(constants.database)
+    )
+    cursor = mydb.cursor()
+    return mydb, cursor
+
+
 def main():
+    # Args parser
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-p", "--path", default="", type=str, help="Filepath to folder with screenshots")
     args = vars(parser.parse_args())
     
+    # checking if path is used or named test
     if args["path"] == "":
         print("No filepath given...")
         return 1
     elif args["path"] == "test":
         pass
+    
+    # Handle args
     filepath = args["path"]
-    crawl_dir_and_add_to_database(filepath)
+    
+    # Main start
+    mydb, cursor = init_db()
+    clean_db(cursor, mydb)
+    crawl_dir_and_add_to_database(filepath, mydb, cursor)
+    print("Done")
     return 0
 
 
