@@ -9,7 +9,7 @@ const ScreenshotDetails = ({ time }) => {
     useEffect(() => {
         const encodedTime = encodeURIComponent(time);
         setLoading(true);
-        fetch(`http://localhost:8081/screenshot?time=${encodedTime}`)
+        fetch(`http://localhost:8081/screenshot/${encodedTime}`)
             .then(res => {
                 if (!res.ok) {
                     throw new Error('Network response was not ok');

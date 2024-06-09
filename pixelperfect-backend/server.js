@@ -29,8 +29,11 @@ app.get('/screenshot', (req, res) => {
 // Fetch screenshots by time
 app.get('/screenshot/:time', (req, res) => {
     const { time } = req.params;
+    dateTime = new Date(time)
+    dateTime.setHours(dateTime.getHours() + 2);
+    s = dateTime.toISOString()
     const sql = "SELECT * FROM `screenshot` WHERE `Time` = ?";
-    db.query(sql, [time], (err, data) => {
+    db.query(sql, [s], (err, data) => {
         if (err) return res.json(err);
         return res.json(data);
     });
