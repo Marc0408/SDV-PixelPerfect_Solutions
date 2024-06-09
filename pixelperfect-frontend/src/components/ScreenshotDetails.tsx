@@ -27,7 +27,8 @@ const ScreenshotDetails = ({ time }) => {
     }, [time]);
 
     useEffect(() => {
-        fetch('http://localhost:8081/tag')
+        const encodedTime = encodeURIComponent(time);
+        fetch(`http://localhost:8081/tags/${encodedTime}`)
             .then(res => {
                 if (!res.ok) {
                     throw new Error('Network response was not ok');

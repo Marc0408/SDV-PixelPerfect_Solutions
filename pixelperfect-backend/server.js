@@ -39,6 +39,20 @@ app.get('/screenshot/:time', (req, res) => {
     });
 });
 
+
+// Fetch screenshots by time
+app.get('/tags/:time', (req, res) => {
+    const { time } = req.params;
+    dateTime = new Date(time)
+    dateTime.setHours(dateTime.getHours() + 2);
+    s = dateTime.toISOString()
+    const sql = "SELECT t.TagID, t.TagName, t.TagValue FROM `screenshot` s, `screentag` st, `tag` t WHERE st.ScreenshotID = s.ScreenshotID AND st.TagID = t.TagID AND s.Time = ?";
+    db.query(sql, [s], (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+});
+
 // Fetch all screentags
 app.get('/screentag', (req, res) => {
     const sql = "SELECT * FROM `screentag`";
