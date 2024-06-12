@@ -86,7 +86,7 @@ app.get('/filtered-screenshots', (req, res) => {
         sql += ` AND (t.TagName = 'Menue' AND t.TagValue IN (${menu.split(',').map(m => `'${m}'`).join(', ')}))`;
     }
     if (area) {
-        sql += ` AND (t.TagName = 'Areas' AND t.TagValue IN (${area.split(',').map(a => `'${a}'`).join(', ')}))`;
+        sql += ` AND (t.TagName = 'Area' AND t.TagValue IN (${area.split(',').map(a => `'${a}'`).join(', ')}))`;
     }
     if (language) {
         sql += ` AND (t.TagName = 'Language' AND t.TagValue IN (${language.split(',').map(l => `'${l}'`).join(', ')}))`;
@@ -126,7 +126,7 @@ app.post('/filtered-screenshots', (req, res) => {
         sql += ` AND (t.TagName = 'Menue' AND t.TagValue IN (${menu.map(m => `'${m}'`).join(', ')}))`;
     }
     if (area && area.length > 0) {
-        sql += ` AND (t.TagName = 'Areas' AND t.TagValue IN (${area.map(a => `'${a}'`).join(', ')}))`;
+        sql += ` AND (t.TagName = 'Area' AND t.TagValue IN (${area.map(a => `'${a}'`).join(', ')}))`;
     }
     if (language && language.length > 0) {
         sql += ` AND (t.TagName = 'Language' AND t.TagValue IN (${language.map(l => `'${l}'`).join(', ')}))`;

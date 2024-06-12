@@ -130,7 +130,7 @@ def crawl_dir_and_add_to_database(path, mydb, cursor):
             screen_id = get_screen_id(cursor, relative_path, constants.STATE_ACTIVE)
             tag_id = set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, "Menue", menue_state)
             set_screentag(mydb, cursor, screen_id, tag_id)
-            tag_id = set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, "Region", get_region_of_screenshot(complete_path, img_path))
+            tag_id = set_tag_in_db_if_not_exists_otherwise_get_id(mydb, cursor, "Area", get_region_of_screenshot(complete_path, img_path))
             set_screentag(mydb, cursor, screen_id, tag_id)
         else:
             set_values_in_database(mydb, cursor, relative_path, constants.STATE_INACTIVE, date_time, side)
