@@ -9,7 +9,7 @@ import menu4Image from '../assets/menu4.png';
 import menu5Image from '../assets/menu5.png';
 import menu6Image from '../assets/menu6.png';
 
-const FilterModal = ({ isVisible, toggleFilterModal }) => {
+const FilterModal = ({ isVisible, toggleFilterModal, setScreenData }) => {
   const [menuSelection, setMenuSelection] = useState([]);
   const [areaSelection, setAreaSelection] = useState([]);
   const [languageSelection, setLanguageSelection] = useState([]);
@@ -110,7 +110,7 @@ const FilterModal = ({ isVisible, toggleFilterModal }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        setScreenData(data);
         toggleFilterModal();
       })
       .catch((error) => console.error(error));
@@ -118,7 +118,7 @@ const FilterModal = ({ isVisible, toggleFilterModal }) => {
 
   return isVisible ? (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-4 rounded-lg w-full max-w-screen-md max-h-[80vh] overflow-auto">
+      <div className="bg-gray-800 p-4 rounded-lg w-full max-w-screen-md max-h-[80vh] overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl">Filteroptionen</h2>
           <button onClick={toggleFilterModal}>

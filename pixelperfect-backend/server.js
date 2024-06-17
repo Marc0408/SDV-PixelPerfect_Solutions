@@ -102,7 +102,7 @@ app.get('/filtered-screenshots', (req, res) => {
         const [from, to] = date.split(',');
         sql += ` AND (s.Time BETWEEN '${from}' AND '${to}')`;
     }
-
+    console.log(sql)
     db.query(sql, (err, data) => {
         if (err) return res.json(err);
         return res.json(data);
@@ -115,7 +115,7 @@ app.post('/filtered-screenshots', (req, res) => {
     const { menu, area, language, weather, temperature, date } = req.body;
 
     let sql = `
-        SELECT s.ScreenshotID, s.Path, s.Time, s.State, s.Side, t.TagName, t.TagValue
+        SELECT s.ScreenshotID, s.Path, s.Time, s.State, s.Side
         FROM screenshot s
         JOIN screentag st ON s.ScreenshotID = st.ScreenshotID
         JOIN tag t ON st.TagID = t.TagID
@@ -127,7 +127,7 @@ app.post('/filtered-screenshots', (req, res) => {
     }
     if (area && area.length > 0) {
         sql += ` AND (t.TagName = 'Area' AND t.TagValue IN (${area.map(a => `'${a}'`).join(', ')}))`;
-    }
+    }/*
     if (language && language.length > 0) {
         sql += ` AND (t.TagName = 'Language' AND t.TagValue IN (${language.map(l => `'${l}'`).join(', ')}))`;
     }
@@ -136,11 +136,11 @@ app.post('/filtered-screenshots', (req, res) => {
     }
     if (temperature && temperature.length === 2) {
         sql += ` AND (t.TagName = 'Temperature' AND t.TagValue BETWEEN ${temperature[0]} AND ${temperature[1]})`;
-    }
+    }*/
     if (date && date.from && date.to) {
         sql += ` AND (s.Time BETWEEN '${date.from}' AND '${date.to}')`;
     }
-
+    console.log(sql)
     db.query(sql, (err, data) => {
         if (err) return res.json(err);
         return res.json(data);

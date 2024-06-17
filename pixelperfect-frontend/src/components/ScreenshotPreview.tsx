@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const ScreenshotPreview = () => {
+const ScreenshotPreview = ({screenshotData}) => {
     const [screenshots, setScreenshots] = useState([]);
-
+   
     useEffect(() => {
+        if(screenshotData==null){
         fetch('http://localhost:8081/screenshot')
             .then(response => response.json())
             .then(data => {
@@ -20,7 +21,19 @@ const ScreenshotPreview = () => {
                 setScreenshots(Object.values(groupedScreenshots));
             })
             .catch(err => console.log(err));
-    }, []);
+        }else{  
+            // Group screenshots by time
+            const groupedScreenshots = screenshotData.reduce((acc, screenshot) => {
+                if (!acc[screenshot.Time]) {
+                    acc[screenshot.Time] = [];
+                }
+                acc[screenshot.Time].push(screenshot);
+                return acc;
+            }, {});
+            setScreenshots(Object.values(groupedScreenshots));
+        }
+    }, [screenshotData]);
+    
 
     return (
         <section className="flex flex-wrap justify-center gap-5 p-4 bg-gray-900">

@@ -3,16 +3,21 @@ import { SearchSection, FilterModal, ScreenshotPreview } from "../components/ind
 
 function Home() {
     const [isFilterModalVisible, setFilterModalVisible] = useState(false);
+    const [screenshotData, setScreenshotData] = useState(null);
 
     const toggleFilterModal = () => {
       setFilterModalVisible(!isFilterModalVisible);
     };
+    const setScreenData = (data) =>{
+      setScreenshotData(data);
+    };
+
   
     return (
       <div className="App">
         <SearchSection toggleFilterModal={toggleFilterModal} />
-        <FilterModal isVisible={isFilterModalVisible} toggleFilterModal={toggleFilterModal} />
-        <ScreenshotPreview />
+        <FilterModal isVisible={isFilterModalVisible} toggleFilterModal={toggleFilterModal} setScreenData={setScreenData}/>
+        <ScreenshotPreview screenshotData={screenshotData}/>
       </div>
     );
   }
