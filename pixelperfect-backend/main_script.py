@@ -3,7 +3,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import PIL.Image
 import constants
 import PIL
-import statistics
+import time
 import os
 import mysql.connector
 
@@ -116,9 +116,9 @@ def get_region_of_screenshot(complete_path, img_path):
 
 
 def crawl_dir_and_add_to_database(path, mydb, cursor):
-    rename_files_to_png(path)
-    
     print("Analyzing screenshots...")
+    analyze_start = time.time()
+    screen_nbr = 0
     for img_path in os.listdir(path):
         complete_path = path + "\\" + img_path
         complete_path = replaceBackSlashWithDoubleBackSlash(complete_path)
@@ -134,6 +134,12 @@ def crawl_dir_and_add_to_database(path, mydb, cursor):
             set_screentag(mydb, cursor, screen_id, tag_id)
         else:
             set_values_in_database(mydb, cursor, relative_path, constants.STATE_INACTIVE, date_time, side)
+        
+        # Time printer
+        screen_nbr += 1
+        if screen_nbr % 1000 == 0:
+            print("Screenshot nbr: " + str(screen_nbr) + " Time needed for 1000 screenshots in sec: " + str(time.time() - analyze_start))
+            analyze_start = time.time()
     return
 
 
@@ -213,9 +219,27 @@ def main():
     filepath = args["path"]
     
     # Main start
+    # Init
     mydb, cursor = init_db()
+    startTime = time.time()
+    
+    # Clean DB
     clean_db(cursor, mydb)
+    cleanDB_time = time.time()
+    print("Time needed in sec: " + str(cleanDB_time - startTime))
+    
+    # Renaming Files to png
+    start_rename = time.time()
+    rename_files_to_png(filepath)
+    end_rename = time.time()
+    print("Time needed in sec: " + str(end_rename - start_rename) + " Total time in sec: " + str(end_rename - startTime))
+    
+    # Analyise ever screenshot
+    start_crawl = time.time()
     crawl_dir_and_add_to_database(filepath, mydb, cursor)
+    end_crawl = time.time()
+    print("Time needed in sec: " + str(end_crawl - start_crawl) + " Total time in sec: " + str(end_crawl - startTime))
+    
     print("Done")
     return 0
 
