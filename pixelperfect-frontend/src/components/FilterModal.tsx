@@ -18,17 +18,17 @@ const FilterModal = ({ isVisible, toggleFilterModal, setScreenData }) => {
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
 
   const menuOptions = [
-    { label: "Menü 1", value: "menu1", image: menu1Image },
-    { label: "Menü 2", value: "menu2", image: menu2Image },
-    { label: "Menü 3", value: "menu3", image: menu3Image },
-    { label: "Menü 4", value: "menu4", image: menu4Image },
-    { label: "Menü 5", value: "menu5", image: menu5Image },
-    { label: "Menü 6", value: "menu6", image: menu6Image },
+    { label: "Menü 1", value: "0", image: menu1Image },
+    { label: "Menü 2", value: "1", image: menu2Image },
+    { label: "Menü 3", value: "2", image: menu3Image },
+    { label: "Menü 4", value: "3", image: menu4Image },
+    { label: "Menü 5", value: "4", image: menu5Image },
+    { label: "Menü 6", value: "5", image: menu6Image },
   ];
 
   const areaOptions = [
-    { label: "KVV", value: "big", icon: <FaMapMarkerAlt /> },
-    { label: "Außerhalb KVV", value: "middle", icon: <FaMapMarkerAlt /> },
+    { label: "KVV", value: "KVV", icon: <FaMapMarkerAlt /> },
+    { label: "Außerhalb KVV", value: "Außerhalb KVV", icon: <FaMapMarkerAlt /> },
   ];
 
   const languageOptions = [
@@ -100,7 +100,6 @@ const FilterModal = ({ isVisible, toggleFilterModal, setScreenData }) => {
       temperature: [temperatureRange.from, temperatureRange.to],
       date: dateRange,
     };
-
     fetch('http://localhost:8081/filtered-screenshots', {
       method: 'POST',
       headers: {
