@@ -13,7 +13,6 @@ Das Projekt wurde geführt von Marvin Veltz, Marc Sutter, Daniel Kelesov
 - [Benutzung](#benutzung)
 - [Features](#features)
 - [Systemanforderungen](#systemanforderungen)
-- [Lizenz](#lizenz)
 
 
 ## Vorbereitung
@@ -49,7 +48,7 @@ python -m venv .venv
 ```
 
 
-Als nächstes müssen wir das VENV aktivieren. Das VENV wird nur für die aktuelle Terminalsitzung aktiv sein. Das Schließen und erneute Öffnen des Terminals wird das VENV deaktivieren. Stellen Sie also immer sicher, dass Sie es aktivieren, bevor Sie den Code verwenden.
+Als nächstes muss das VENV aktiviert werden. Das VENV wird nur für die aktuelle Terminalsitzung aktiv sein. Das Schließen und erneute Öffnen des Terminals wird das VENV deaktivieren. Stellen Sie also immer sicher, dass Sie es aktivieren, bevor Sie den Code verwenden.
 
 ```
 .venv\Scripts\Activate.ps1
